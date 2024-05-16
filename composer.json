@@ -1,0 +1,23 @@
+{
+    "name": "amne/psr16-layers",
+    "description": "PSR16 implementation that reads and writes to a layered cache built from other PSR16 implementations",
+    "type": "library",
+    "require": {
+        "psr/simple-cache": "^3.0"
+    },
+    "require-dev": {
+        "matthiasmullie/scrapbook": "^1.5",
+        "phpunit/phpunit": "^11.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Amne\\Psr16Layers\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Cornel Cruceru",
+            "email": "amne@amne.me"
+        }
+    ]
+}
