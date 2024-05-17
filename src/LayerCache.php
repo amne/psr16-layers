@@ -143,6 +143,7 @@ class LayerCache implements CacheInterface
         foreach ($wrappedValues as $key => $value) {
             if (in_array($key, $keys)) {
                 $values[$key] = $value;
+                // let's replace NULL with PHP_INT_MAX which should get clamped to the layer's max TTL
                 $ttls[$key] = $wrappedValues[$this->_key_meta($key)][1] ?? PHP_INT_MAX;
             }
         }
@@ -179,8 +180,10 @@ class LayerCache implements CacheInterface
      * Clamp it to max lifetime for the simpleCacheLayer
      *
      * If ttl is DateInterval it gets turned into seconds.
+     *
+     * TODO: If TTL is 0 the key should be deleted actually
      */
-    private function _getLayerMaxTTL(int $simpleCacheLayerIndex, null|int|\DateInterval $ttl = 0): int
+    private function _getLayerMaxTTL(int $simpleCacheLayerIndex, null|int|\DateInterval $ttl = null): ?int
     {
         if (null === $ttl) {
             return $this->maxTTLs[$simpleCacheLayerIndex] ?? null;
@@ -192,13 +195,13 @@ class LayerCache implements CacheInterface
             $ttl = $later->getTimestamp() - $now->getTimestamp();
         }
 
-        return $ttl = $ttl === 0 ? $this->maxTTLs[$simpleCacheLayerIndex] : min($ttl, $this->maxTTLs[$simpleCacheLayerIndex]);
+        return $ttl = $ttl === 0 ? $this->maxTTLs[$simpleCacheLayerIndex] : min($ttl, $this->maxTTLs[$simpleCacheLayerIndex] ?? PHP_INT_MAX);
     }
 
     /**
      * Set a key in all kv-layers.
      */
-    public function set(string $key, mixed $value, null|int|\DateInterval $ttl = 0): bool
+    public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool
     {
         $result = $this->setMultiple([$key => $value], $ttl);
 
@@ -212,7 +215,7 @@ class LayerCache implements CacheInterface
      * This method tries to rollback if any simpleCacheLayers fails
      * to set all the keys.
      */
-    public function setMultiple(\Traversable|array $items, null|int|\DateInterval $ttl = null): bool 
+    public function setMultiple(iterable $items, null|int|\DateInterval $ttl = null): bool 
     {
         $simpleCacheLayerIndex = count($this->simpleCacheLayers);
         $results = array_fill_keys(array_keys($items), true); 
