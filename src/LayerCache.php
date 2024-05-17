@@ -52,10 +52,12 @@ class LayerCache implements CacheInterface
     public function __construct(array $simpleCacheLayers, array $maxTTLs = [])
     {
         foreach ($simpleCacheLayers as $i => $simpleCacheLayer) {
-            if ($simpleCacheLayer instanceof CacheInterface) {
-                $this->simpleCacheLayers[] = $simpleCacheLayer;
-                $this->maxTTLs[] = $maxTTLs[$i] ?? PHP_INT_MAX;
+            if ( !($simpleCacheLayer instanceof CacheInterface) ) {
+                throw new \RuntimeException('Cache layer must implement PSR-16 Psr\SimpleCache\CacheInterface');
             }
+
+            $this->simpleCacheLayers[] = $simpleCacheLayer;
+            $this->maxTTLs[] = $maxTTLs[$i] ?? PHP_INT_MAX;
         }
     }
 
