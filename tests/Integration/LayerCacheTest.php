@@ -1,8 +1,8 @@
 <?php
 
-namespace Amne\Tests\LayerCache;
+namespace Amne\Tests\Integration;
 
-use Amne\Psr16Layers\LayerCache;
+use Amne\SimpleCacheLayers\LayerCache;
 use MatthiasMullie\Scrapbook\Adapters\MemoryStore;
 use MatthiasMullie\Scrapbook\Psr16\SimpleCache;
 use PHPUnit\Framework\TestCase;

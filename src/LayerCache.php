@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Amne\Psr16Layers;
+namespace Amne\SimpleCacheLayers;
 
 use DateInterval;
 use Psr\SimpleCache\CacheInterface;
