@@ -68,4 +68,22 @@ class LayerCacheTest extends TestCase
 		$this->assertSame($expected, $this->subject->getMultiple(array_keys($expected)));
 		$this->assertEquals('value-1', $this->layers[0]->get('key-1'));
 	}
+
+	public function testHas()
+	{
+		// obvious test
+		$this->assertFalse($this->subject->has('does-not-exist'));
+
+		// returns true if the first layer has the key
+		$this->layers[0]->set('key-in-first-layer', 'value-1');
+		$this->assertTrue($this->subject->has('key-in-first-layer'));
+
+		// returns true if the second layer has the key 
+		$this->layers[0]->set('key-in-second-layer', 'value-2');
+		$this->assertTrue($this->subject->has('key-in-second-layer'));
+
+		// if key exists get must return the value
+		$this->assertEquals('value-1', $this->subject->get('key-in-first-layer'));
+		$this->assertEquals('value-2', $this->subject->get('key-in-second-layer'));
+	}
 }

@@ -89,13 +89,13 @@ class LayerCache implements CacheInterface
 
     public function has(string $key): bool
     {
-        $result = true;
+        $result = false;
         if (empty($this->simpleCacheLayers)) {
             return false;
         }
 
         foreach($this->simpleCacheLayers as $simpleCacheLayer) {
-            $result = $result && $simpleCacheLayer->has($key);
+            $result = $result || $simpleCacheLayer->has($key);
         }
 
         return $result;
