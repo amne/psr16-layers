@@ -66,7 +66,7 @@ class LayerCache implements CacheInterface
         if (!is_scalar($key)) {
             throw new \Exception('key is not scalar');
         }
-        return $key . '-kvls-meta';
+        return $key . '-layer-meta';
     }
 
     /**
